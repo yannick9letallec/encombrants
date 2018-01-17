@@ -1,0 +1,70 @@
+<main>
+	<header class="">
+		<H1>
+			<!-- Go Multilang --> 
+			Encombrants 
+		</h1>
+	</header>
+	
+	<article id="map">
+
+	</article>
+
+	<article id="enc_list">
+		Will display list of active encombrants ...
+	</article>
+	
+	<footer class="">
+
+	</footer>
+</main>
+
+<script>
+	var currentPosition = { lat: 0, lng: 0 } 
+	function getLocation(){
+		if( navigator.geolocation ){
+			navigator.geolocation.getCurrentPosition(showPosition, positionError, { enableHighAccuracy: true, timeout: 50000, maximumAge: 60000 } )
+		} else {
+			console.log( "Geolocation is not supported by your browser" )
+		}
+	}
+	function positionError( error ){
+		console.error( "POSITION: " )
+		console.dir( error )
+	}
+
+	function showPosition( position ){
+		console.group()
+			console.log( "Current Latitude: " + position.coords.latitude )
+			console.log( "Current Longitude: " + position.coords.longitude )
+			console.log( "Accuracy: " + position.coords.accuracy )
+			console.log( "Heading: " + position.coords.heading )
+			console.log( "Timestamp: : " + new Date ( position.timestamp ) )
+		console.groupEnd()
+
+		currentPosition.lat = position.coords.latitude
+		currentPosition.lng = position.coords.longitude
+		
+		console.log( currentPosition )
+
+		var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+		console.log( " --> " + latlng )
+	}
+
+	function initMap() {
+		var map = new google.maps.Map(document.getElementById('map'), {
+		  zoom: 4,
+		  center: currentPosition,
+		  mapTypeId: "terrain"
+		});
+		var marker = new google.maps.Marker({
+		  position: currentPosition,
+		  map: map
+		});
+
+	      }
+
+
+	getLocation()
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN2OomnGmeQLUrctCYJEXO64Y6KqohEZg&callback=initMap"></script>	
