@@ -3,9 +3,11 @@
 <form action="legal_city_choice" method="post" enctype="application/x-www-form-urlencoded" id="">
 
 	<span v-for="city of cities">
-		<label for="{{ city }}"> {{ city }} </label>
 		<input type="radio"  value="{{ city }}" />
+		<label for="{{ city }}"> {{ city }} </label>
+		<br />
 	</span>
+
 	<br />
 	<input type="submit" value="OK" />
 </form>
