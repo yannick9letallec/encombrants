@@ -1,30 +1,75 @@
+const fs = require( "fs" )
+const path = require( "path" )
 const util = require( "util" )
 const Handlebars = require( "handlebars" )
+const delimiters = require( "handlebars-delimiters" )
 const express = require('express')
 const exphbs = require( "express-handlebars" )
 const hbs = exphbs.create()
-const fs = require( "fs" )
 const app = express()
-const path = require( "path" )
+const Coords = require( "random-coordinates" )
+const bodyParser = require('body-parser');
 
-var head = Handlebars.registerPartial( "header", "<h1> TEST H1 </h1>" )
+
+// change handlebars delimiter
+delimiters( Handlebars, [ "<%", "%>" ] )
+let coords
 
 // define default view handler
-app.set( "view engine", "handlebars" )
-app.set( "view cache", undefined )
 app.set( "views", "./web/views/" )
+app.set( "view cache", undefined )
 // app.engine( "handlebars", require( "handlebars" ).compile )
-app.engine('handlebars', exphbs( { layoutsDir: "./web/views/layouts",partialsDir: "./web/views/partials", defaultLayout: 'main' } ))
-
+app.engine( 'handlebars', exphbs( { layoutsDir: "./web/views/layouts", partialsDir: "./web/views/partials", defaultLayout: 'main', helpers: {
+	 toJSON : function( object ) {
+		 console.log( "HDB HELPER JSON " + JSON.stringify( object ))
+		  return JSON.stringify(object);
+	  }
+	}
+} ) )
+app.set( "view engine", "handlebars" )
 
 // allways call !
+app.use( function( req, res, next ) {
+	bodyParser.urlencoded( { extended: true } )
+	next()
+})
+
 app.use( function( req, res, next ){
 	console.log( "DO SOME PRE ROUTE JOB : Auth, DB Connect ..." )
+	
+	// random geo data
+	let pre_coords = Coords().split( "," )
+	coords = {
+		lat: pre_coords[ 0 ],
+		lng: pre_coords[ 1 ]
+	}
+	console.log( coords )
 	next()
 })
 app.get( "/", function ( req, res ) {
 	console.log( "GETTING INDEX BODY" )
-	res.render( "index" )
+	res.render( "index", { coords: coords } )
+})
+app.get( "/legal", function ( req, res ) {
+	console.log( "GETTING LEGAL PAGE" )
+	res.render( "legal" )
+})
+
+app.post( "/legal_city_choice", function( req, res ){
+	console.log( "Receive From FORM !!!!!!!!!!!!!!!" )
+	console.log( req.get( "Content-Type" ))
+	console.log( req.body )
+})
+
+// JS
+app.get( "/*vue*", function ( req, res ) {
+	fs.readFile( "./node_modules/vue/dist/vue.min.js", ( err, data ) => {
+		if ( err ) console.log( "ERROR : GETTING VUE JS" )
+		
+		console.log( "GETTING VUE JS" )
+		res.type( "application/javascript" )
+		res.send( data )
+	})
 })
 // CSSs
 app.get( "/*.css*", function ( req, res ) {
@@ -38,10 +83,9 @@ app.get( "/*.css*", function ( req, res ) {
 })
 // IMAGES
 app.get( "/*.(ico|png)*", function ( req, res ) {
-	fs.readFile( "./web/images/" + path.basename( req.path ), ( err, data ) => {
+	console.log( "GETTING IMAGE " + req.path )
+	fs.readFile( req.path, ( err, data ) => {
 		if ( err ) console.log( "ERROR : GETTING IMAGE" + util.inspect( err, { showHidden: true, depth: null } ))
-
-		console.log( "GETTING IMAGE" )
 
 		var ext = path.extname( req.path )
 		if(  ext === "ico" ) {
@@ -71,6 +115,11 @@ app.get('/connect', function (req, res) {
 app.get('/about', function (req, res) {
 	  res.send('ABOUTT')
 })
+
+app.get('/legal_get-cities', function (req, res) {
+	  res.render('legal_get-cities', { layout: false } )
+})
+
 app.use( function ( req, res, next ){
 	res.status( 404 ).send( "SORRY, 4 THIS IS A BLANK PAGE" )
 })

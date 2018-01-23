@@ -1,0 +1,12 @@
+<div id="test_vue">
+<h2> Selectionner votre localité : </h2>
+<form action="legal_city_choice" method="post" enctype="application/x-www-form-urlencoded" id="">
+
+	<span v-for="city of cities">
+		<label for="{{ city }}"> {{ city }} </label>
+		<input type="radio"  value="{{ city }}" />
+	</span>
+	<br />
+	<input type="submit" value="OK" />
+</form>
+</div>
