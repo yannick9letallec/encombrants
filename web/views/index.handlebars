@@ -6,6 +6,7 @@
 			<ul>
 				<li> <a id="legal-link" onclick="javascript:getPositionForLegal()"> Legal & Juridique </a> </li>
 				<li> <a href="/add_point" id="add-point-link"> Add Point </a> </li>
+				<li> <a href="/about" id="about"> About </a> </li>
 			</ul>	
 		</nav>
 	</header>
@@ -211,9 +212,58 @@
 			data: {
 				message: "Bienvenue dans les rouages de Vue JS",
 				cities: [] 
+			},
+			methods: {
+				enable_submit: function ( event ){
+					var opt = document.querySelectorAll( "[name=city]" )
+					var l = opt.length
+
+					for( var n = 0; n < l; n++ ){
+						if( opt[ n ].checked ) {
+							document.getElementById( "submit_city" ).disabled = false
+							break
+						}
+					}
+				},
+				submit_legal_city: function ( event ){
+					// 1 - prevent default process of event
+					event.preventDefault()
+
+					// 2 - retrieve form data
+					var city = document.querySelector('input[name="city"]:checked').value;
+					console.log( "CITY : " + city ) 
+					// 3 - send it via AJAX / XHR
+					var xhr = new XMLHttpRequest()
+
+					xhr.open( "POST", "/legal_city_choice", false )
+					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+					xhr.onreadystatechange = function( ){
+						if( xhr.readyState === 4 && xhr.status === 200 ) {
+							adaptDivForFullHTMLPage( xhr.responseText )
+						}	
+					}
+
+					xhr.send( "city=" + city )
+				}
 			}
 		})
 	}
+
+	function adaptDivForFullHTMLPage( link ){
+		var iframe = document.createElement( "iframe" )
+		iframe.src = link
+		iframe.style.width = "100%"
+		iframe.style.height = "100%"
+
+		var el = document.getElementById( "helper_div" )
+
+		while( el.firstChild ){
+			el.removeChild( el.firstChild )
+		}
+
+		el.appendChild( iframe )
+	} 
 
 </script>
 

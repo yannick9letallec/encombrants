@@ -1,14 +1,15 @@
 <div id="test_vue">
-<h2> Selectionner votre localité : </h2>
-<form action="legal_city_choice" method="post" enctype="application/x-www-form-urlencoded" id="">
+	<h2> Selectionner votre localité : </h2>
+	<form action="legal_city_choice" method="post" enctype="application/x-www-form-urlencoded" id="legal_city_choice" v-on:submit="javascript:submit_legal_city( event )">
 
-	<span v-for="city of cities">
-		<input type="radio"  value="{{ city }}" />
-		<label for="{{ city }}"> {{ city }} </label>
+		<span v-for="city of cities">
+			<input v-bind:id="city" name="city" type="radio"  v-bind:value="city" v-on:click="javascript:enable_submit( event )" />
+			<label v-bind:for="city"> {{ city }} </label>
+			<br />
+		</span>
+
 		<br />
-	</span>
-
-	<br />
-	<input type="submit" value="OK" />
-</form>
+		<input type="submit" id="submit_city" value="OK" disabled />
+	</form>
 </div>
+

@@ -9,6 +9,8 @@ const hbs = exphbs.create()
 const app = express()
 const Coords = require( "random-coordinates" )
 const bodyParser = require('body-parser');
+const exec = require('child_process').exec;
+const legal_tools = require( "./node/legal.js" )
 
 
 // change handlebars delimiter
@@ -17,7 +19,7 @@ let coords
 
 // define default view handler
 app.set( "views", "./web/views/" )
-app.set( "view cache", undefined )
+app.set( "view cache", false )
 // app.engine( "handlebars", require( "handlebars" ).compile )
 app.engine( 'handlebars', exphbs( { layoutsDir: "./web/views/layouts", partialsDir: "./web/views/partials", defaultLayout: 'main', helpers: {
 	 toJSON : function( object ) {
@@ -28,9 +30,10 @@ app.engine( 'handlebars', exphbs( { layoutsDir: "./web/views/layouts", partialsD
 } ) )
 app.set( "view engine", "handlebars" )
 
+var urlencodeParser = bodyParser.urlencoded( { extended: false } )
+
 // allways call !
 app.use( function( req, res, next ) {
-	bodyParser.urlencoded( { extended: true } )
 	next()
 })
 
@@ -50,15 +53,18 @@ app.get( "/", function ( req, res ) {
 	console.log( "GETTING INDEX BODY" )
 	res.render( "index", { coords: coords } )
 })
+
+
+// legal part
 app.get( "/legal", function ( req, res ) {
 	console.log( "GETTING LEGAL PAGE" )
 	res.render( "legal" )
 })
 
-app.post( "/legal_city_choice", function( req, res ){
-	console.log( "Receive From FORM !!!!!!!!!!!!!!!" )
-	console.log( req.get( "Content-Type" ))
-	console.log( req.body )
+app.post( "/legal_city_choice", urlencodeParser, function( req, res ){
+	
+	console.log( req.headers + " CITY : " + req.body.city )
+	legal_tools.createGoogleRequest( { city: req.body.city, token: "encombrants" }, res )
 })
 
 // JS
