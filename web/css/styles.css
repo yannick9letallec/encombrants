@@ -95,6 +95,7 @@ body {
   font-size: 12px;
 }
 header {
+  height: 50px;
   margin-bottom: 5px;
   padding: 10px;
   background-color: #888;

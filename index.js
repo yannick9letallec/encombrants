@@ -30,12 +30,11 @@ app.engine( 'handlebars', exphbs( { layoutsDir: "./web/views/layouts", partialsD
 } ) )
 app.set( "view engine", "handlebars" )
 
-var urlencodeParser = bodyParser.urlencoded( { extended: false } )
+// var urlencodeParser = bodyParser.urlencoded( { extended: false } )
 
-// allways call !
-app.use( function( req, res, next ) {
-	next()
-})
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use( function( req, res, next ){
 	console.log( "DO SOME PRE ROUTE JOB : Auth, DB Connect ..." )
@@ -61,7 +60,7 @@ app.get( "/legal", function ( req, res ) {
 	res.render( "legal" )
 })
 
-app.post( "/legal_city_choice", urlencodeParser, function( req, res ){
+app.post( "/legal_city_choice", function( req, res ){
 	
 	console.log( req.headers + " CITY : " + req.body.city )
 	legal_tools.createGoogleRequest( { city: req.body.city, token: "encombrants" }, res )
