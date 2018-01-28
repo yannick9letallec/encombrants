@@ -1,30 +1,34 @@
 <main>
 	<header class="">
-			<div class="logo">
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			  <div class="layer"></div>
-			</div>
+		<div class="logo">
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		  <div class="layer"></div>
+		</div>
+
 		<nav>
 			<!-- Go Multilang --> 
 
+			<span class="mobile_nav">
+				<i class="fa fa-bars fa-2x"></i>
+			</span>
 			<ul>
 				<li> <a id="legal-link" onclick="javascript:getPositionForLegal()"> Legal & Juridique </a> </li>
 				<li> <a href="/add_point" id="add-point-link"> Add Point </a> </li>
@@ -33,9 +37,55 @@
 		</nav>
 	</header>
 	
-	<article id="map">
+	<article id="map"> </article>
 
-	</article>
+	<div id="arguments" class="row">
+		<div class="col-sm-3">
+			<div class="card">
+				<div>
+				<img class="card-img-top" alt="surprise" src="web/images/surprise.jpeg" />
+				</div>
+				<div class="card-body">
+					<h4 class="card-title"> Surprise ! </h4>
+					<p class="card-text"> Quelle surprise de découvrir une zone de dépôt ! Quel objet allez vous y trouver ? Quelle sera votre prochaîne inspiration ? </p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3">
+			<div class="card">
+				<img class="card-img-top" alt="encombrants" src="web/images/encombrants_2.jpeg" />
+				<div class="card-body">
+					<h4 class="card-title"> Recyclage Effectif </h4>
+					<p class="card-text"> Vos anciens meubles et objets ont de la valeur. Plus que ce que vous ne pensez ! </p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3">
+			<div class="card">
+				<div>
+				<img class="card-img-top" alt="Résurection" src="web/images/restauration_0.png" />
+				</div>
+				<div class="card-body">
+					<h4 class="card-title"> Seconde Vie ! </h4>
+					<p class="card-text"> Que vous y croyez ou pas, offrez une seconde vie à vos objects ! Le saviez vous ? Les Japonais réparent un objet brisé avec de l'or, en effet ils considèrent que si l'objet est produit en série, c'est sa félure qui le rend unique. Pour eux, seul l'or peut réveler cete unicité à sa juste valeur. </p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3">
+			<div class="card">
+				<div>
+				<img class="card-img-top" alt="surprise" src="web/images/surprise.jpeg" />
+				</div>
+				<div class="card-body">
+					<h4 class="card-title"> Surprise ! </h4>
+					<p class="card-text"> Quelle surprise de découvrir une zone de dépôt ! Quel objet allez vous y trouver ? Quelle sera votre prochaîne inspiration ? </p>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<article id="enc_list">
 		Will display list of active encombrants ...
@@ -49,6 +99,20 @@
 
 	<!-- usual div for messaging -->
 	<div id="message"> </div>
+
+	<!-- div for responsive nav -->
+	<div class="responsive_nav">
+		<div class="close_nav">
+			<i class="fas fa-pull-right fa-times fa-2x"> </i>
+		</div>
+		<br />
+		<br />
+		<div class="title">
+			Navigation :
+		</div>
+		<div class="content">
+		</div>
+	 </div>
 </main>
 
 <script>
@@ -56,7 +120,7 @@
 	var geocode
 	var realPosition
 	var legal_cities = []
-	var currentPosition = "{ lat: 10.00002, lng: 369874 }" // <% toJSON coords %>
+	var currentPosition = {} // "{ lat: 10.00002, lng: 369874 }" // <% toJSON coords %>
 
 	function getLocation(){
 		if( navigator.geolocation ){
@@ -71,27 +135,20 @@
 	}
 
 	function showPosition( position ){
-		/*
-		console.group()
-			console.log( "Current Latitude: " + position.coords.latitude )
-			console.log( "Current Longitude: " + position.coords.longitude )
-			console.log( "Accuracy: " + position.coords.accuracy )
-			console.log( "Heading: " + position.coords.heading )
-			console.log( "Timestamp: : " + new Date ( position.timestamp ) )
-		console.groupEnd()
-		*/
+		currentPosition = { lat: position.coords.latitude, lng: position.coords.longitude }
+
 		initMap()
 	}
 
 	function initMap() {
 		var coords = { lat: Number( currentPosition.lat ), lng: Number( currentPosition.lng ) }
 		var map = new google.maps.Map(document.getElementById('map'), {
-		  zoom: 4,
+		  zoom: 14,
 		  center: coords,
 		  mapTypeId: "terrain"
 		});
 		var marker = new google.maps.Marker({
-		  position: coords,
+		  position: currentPosition,
 		  map: map
 		});
 
@@ -153,7 +210,7 @@
 	}
 	function getPosition( position ){
 		realPosition = { lat: position.coords.latitude, lng: position.coords.longitude }
-		console.log( realPosition )
+		console.log( "REAL POS : " + realPosition )
 		getReverseGeoCode( realPosition )
 	}
 	
@@ -286,6 +343,85 @@
 
 		el.appendChild( iframe )
 	} 
+
+	// CARDS - OPTIMS
+	(function( ){
+
+		var cards = document.getElementsByClassName( "card" )
+		var l = cards.length	
+		var initialCardLength = cards[ 0 ].style.height
+
+		// attach event
+	
+		console.log( "------------------" + cards.length ) 
+
+		for( var i = 0; i < l; i++ ){
+			cards[ i ].addEventListener( "mouseover", displayCards ) 
+			cards[ i ].addEventListener( "mouseout", displayCardsBack ) 
+		}
+
+		function displayCards( event ){
+			for( var i = 0; i < l; i++ ){
+				cards[ i ].style.overflow = "initial"
+				cards[ i ].style.height = "initial"
+			}
+			
+			// find max length
+			var heights = []
+			for( var i = 0; i < l; i++ ){
+				heights.push( cards[ i ].offsetHeight )
+			}
+
+			var maxHeight = heights.sort()
+			maxHeight = maxHeight[ maxHeight.length - 1 ]
+
+			for( var i = 0; i < l; i++ ){
+				cards[ i ].style.height = maxHeight + "px"
+			}
+			
+			console.log( "------------------" +  maxHeight ) 
+
+		}
+		function displayCardsBack( event ){
+			for( var i = 0; i < l; i++ ){
+				cards[ i ].style.overflow = "hidden"
+				cards[ i ].style.height = initialCardLength
+			}
+		}
+
+	} ) ()
+
+	// RESPONSIVE NAV
+	// click on hamburger / bars ( font awesome )
+	var respNav = document.getElementsByClassName( "mobile_nav" )[ 0 ]
+	var respNavDiv = document.getElementsByClassName( "responsive_nav" )[ 0 ]
+
+	respNav.addEventListener( "click", function( event ){
+		var nav = document.querySelector( "header ul" )
+
+		respNavDiv.classList.toggle( "opened" )
+		respNavDiv.querySelector( ".content" ).innerHTML = nav.innerHTML
+
+		// on click link
+		var linkCloseNav = document.querySelectorAll( ".responsive_nav a" )
+		var k = linkCloseNav.length
+
+		for( var m = 0; m < k; m++ ){
+			linkCloseNav[ m ].addEventListener( "click", function( event ){
+				event.preventDefault()
+				respNavDiv.classList.toggle( "opened" )
+			})
+		}
+		
+	})
+	// CLOSE NAV
+	// on close button
+	var closeNav = document.querySelector( ".close_nav" )
+	closeNav.addEventListener( "click", function( event ){
+		respNavDiv.classList.toggle( "opened" )
+	
+	})
+	
 
 </script>
 

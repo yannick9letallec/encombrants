@@ -6,9 +6,8 @@
   width: 250px;
   margin: auto;
   position: absolute;
-  top: -20px;
-  right: 0px;
-  left: -900px;
+  top: -35px;
+  left: 10px;
   perspective: 9999px;
   transform-style: preserve-3d;
 }

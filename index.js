@@ -50,7 +50,8 @@ app.use( function( req, res, next ){
 })
 app.get( "/", function ( req, res ) {
 	console.log( "GETTING INDEX BODY" )
-	res.render( "index", { coords: coords } )
+	console.dir( coords ) 
+	res.render( "index" )
 })
 
 
@@ -87,12 +88,13 @@ app.get( "/*.css*", function ( req, res ) {
 	})
 })
 // IMAGES
-app.get( "/*.(ico|png)*", function ( req, res ) {
+app.get( "*.(ico|png|jpeg|jpg)", function ( req, res ) {
 	console.log( "GETTING IMAGE " + req.path )
-	fs.readFile( req.path, ( err, data ) => {
+	fs.readFile( "./web/images/" + path.basename( req.path ), ( err, data ) => {
 		if ( err ) console.log( "ERROR : GETTING IMAGE" + util.inspect( err, { showHidden: true, depth: null } ))
 
-		var ext = path.extname( req.path )
+		console.log( "IMG IN ------------------" + req.path ) 
+		var ext = path.extname( req.path ).substr( 1 )
 		if(  ext === "ico" ) {
 			var subtype = "x-icon"
 		} else {
